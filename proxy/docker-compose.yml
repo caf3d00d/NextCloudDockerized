@@ -1,0 +1,44 @@
+version: '3'
+
+secrets:
+  # Secrets are single-line text files where the sole content is the secret
+  # Paths in this example assume that secrets are kept in local folder called ".secrets"
+  DB_ROOT_PWD:
+    file: .secrets/db_root_pwd.txt
+  MYSQL_PWD:
+    file: .secrets/mysql_pwd.txt
+
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx_manager
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./encryption:/etc/encryption
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_NAME: ${MYSQL_NAME}
+  mariadb:
+    image: jc21/mariadb-aria
+    container_name: mariadb
+    restart: unless-stopped
+    secrets:
+      - DB_ROOT_PWD
+      - MYSQL_PWD
+    environment:
+      # MYSQL_ROOT_PASSWORD: "npm"  # use secret instead
+      MYSQL_ROOT_PASSWORD__FILE: /run/secrets/DB_ROOT_PWD
+      MYSQL_DATABASE: "npm"
+      MYSQL_USER: "npm"
+      # MYSQL_PASSWORD: "npm"  # use secret instead
+      MYSQL_PASSWORD__FILE: /run/secrets/MYSQL_PWD 
+    volumes:
+      - ./data/mysql:/var/lib/mysql
