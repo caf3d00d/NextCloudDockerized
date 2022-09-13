@@ -4,7 +4,7 @@ proxy:
 	docker-compose -f proxy/docker-compose.yml up --build
 
 nextcloud:
-	docker-compose -f proxy/docker-compose.yml up --build
+	docker-compose -f nextcloud/docker-compose.yml up --build
 
 prune:
 	@ docker system prune -f
