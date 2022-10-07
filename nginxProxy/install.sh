@@ -1,6 +1,6 @@
 #!/bin/bash
 
-domain=domain.ch
+domain=(domain.ch www.domain.ch)
 rsa_size=4096
 path="./data/certbot"
 # Email is not a must but required to a safe installation 
@@ -8,7 +8,7 @@ email="mail@mail.com"
 
 function check_is_installed() {
   if [ -d "$path" ]; then
-    read -p "Certbot is already configured for $domain. Would you like to continue and replace it? (y/N)" res
+    read -p "Certbot is already configured for $domain. Would you like to continue and replace it? (y/N) " res
     if [ "$res" != "Y" ] && [ "$res" != "y" ]; then
       exit
     fi
@@ -28,6 +28,7 @@ function ssl_param_config() {
 function create_tmp_cert() {
   echo "Creating temporary certificate..."
   tmp_path="/etc/letsencrypt/live/$domain"
+  mkdir -p "$path/conf/live/$domain"
   docker-compose run --rm --entrypoint "openssl req -x509 -nodes -newkey rsa:$rsa_size -days 1 -keyout '$tmp_path/privkey.pem' -out '$tmp_path/fullchain.pem' -subj '/CN=localhost'" certbot
   echo "Creating temporary certificate, Done!"
 }

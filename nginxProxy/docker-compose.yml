@@ -1,4 +1,5 @@
 version: '3'
+
 services:
   nginx:
     image: nginx:1.15-alpine
@@ -9,9 +10,12 @@ services:
       - ./data/nginx:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
+    #    command: sh -c "curl -L https://raw.githubusercontent.com/n0bits/NextCloudDockerized/main/nginxProxy/install.sh > install.sh"
+    #    command: sh -c "./install.sh"
+
   certbot:
-    image: certbot/certbot
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      image: certbot/certbot
+      volumes:
+        - ./data/certbot/conf:/etc/letsencrypt
+        - ./data/certbot/www:/var/www/certbot
 
