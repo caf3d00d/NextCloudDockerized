@@ -1,13 +1,13 @@
 all: proxy nextcloud
 
 proxy:
-	docker-compose -f proxy/docker-compose.yml up -d
+	docker-compose -f nginxProxy/docker-compose.yml up -d
 
 nextcloud:
 	docker-compose -f nextcloud/docker-compose.yml up -d
 
 stop:
-	docker-compose -f proxy/docker-compose.yml down
+	docker-compose -f nginxProxy/docker-compose.yml down
 	docker-compose -f nextcloud/docker-compose.yml down
 
 prune: stop
